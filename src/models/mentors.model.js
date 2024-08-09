@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const koderSchema = new mongoose.Schema({
+const mentorsSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: true,
@@ -16,7 +16,15 @@ const koderSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    minLength: 5,
+    maxLength: 100,
     match: RegExp(".*@.*..*"),
+  },
+  age: {
+    type: Number,
+    required: true,
+    min: 15,
+    max: 100,
   },
   createAt: {
     type: Date,
@@ -24,8 +32,4 @@ const koderSchema = new mongoose.Schema({
   },
 });
 
-// para el modelo necesitamos el nombre de la colección y el esquema
-module.exports = mongoose.model("koder", koderSchema);
-// usando nuestro modelo vamos a comunicarnos con nuestra base de datos
-// - crear nuevos documentos
-// - buscar documentos
+module.exports = mongoose.model("mentors", mentorsSchema);
