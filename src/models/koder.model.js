@@ -18,6 +18,12 @@ const koderSchema = new mongoose.Schema({
     required: true,
     match: RegExp(".*@.*..*"),
   },
+  password: {
+    // password encriptado
+    type: String,
+    required: true,
+    select: false,
+  },
   createAt: {
     type: Date,
     default: new Date(),

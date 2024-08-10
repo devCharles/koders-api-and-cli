@@ -2,10 +2,11 @@ const express = require("express");
 const createError = require("http-errors");
 
 const kodersUseCases = require("../usecases/koders.usecases");
+const auth = require("../middlewares/auth");
 
 const router = express.Router();
 
-router.get("/", async (request, response) => {
+router.get("/", auth, async (request, response) => {
   try {
     const koders = await kodersUseCases.getAll();
 
@@ -23,7 +24,7 @@ router.get("/", async (request, response) => {
   }
 });
 
-router.get("/:id", async (request, response) => {
+router.get("/:id", auth, async (request, response) => {
   try {
     const id = request.params.id;
     const koder = await kodersUseCases.getById(id);
@@ -46,7 +47,7 @@ router.get("/:id", async (request, response) => {
   }
 });
 
-router.post("/", async (request, response) => {
+router.post("/", auth, async (request, response) => {
   try {
     const koderData = request.body;
     const newKoder = await kodersUseCases.create(koderData);
@@ -65,7 +66,7 @@ router.post("/", async (request, response) => {
   }
 });
 
-router.patch("/:id", async (request, response) => {
+router.patch("/:id", auth, async (request, response) => {
   try {
     const id = request.params.id;
     const koderData = request.body;
@@ -86,7 +87,7 @@ router.patch("/:id", async (request, response) => {
   }
 });
 
-router.delete("/:id", async (request, response) => {
+router.delete("/:id", auth, async (request, response) => {
   try {
     const id = request.params.id;
 
@@ -96,6 +97,44 @@ router.delete("/:id", async (request, response) => {
       success: true,
       message: "Koder deleted",
       data: { koder: koderDeleted },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+router.post("/signup", async (request, response) => {
+  try {
+    const data = request.body;
+    const koder = await kodersUseCases.signUp(data);
+
+    response.json({
+      success: true,
+      message: "Koder registered",
+      data: { koder },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+router.post("/login", async (request, response) => {
+  try {
+    const data = request.body;
+    const token = await kodersUseCases.login(data);
+
+    response.json({
+      success: true,
+      message: "Koder logged in",
+      data: { token },
     });
   } catch (error) {
     response.status(error.status || 500);
