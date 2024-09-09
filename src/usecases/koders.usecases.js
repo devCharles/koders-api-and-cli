@@ -41,11 +41,8 @@ async function signUp(data) {
 
   const password = encryption.encrypt(data.password);
 
-  data.password = password;
-
   // crear el koder
-  const newKoder = await Koder.create(data);
-  // const newKoder = await Koder.create({ ...data, password });
+  const newKoder = await Koder.create({ ...data, password });
 
   return newKoder;
 }
